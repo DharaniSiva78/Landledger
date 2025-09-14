@@ -1,0 +1,418 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LandLedger - Blockchain Land Registry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-landmark"></i>
+                <span>LandLedger</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showPage('home')">Home</a></li>
+                    <li><a href="#" onclick="showPage('properties')">Properties</a></li>
+                    <li><a href="#" onclick="showPage('verify')">Verify Property</a></li>
+                    <li><a href="#" onclick="showPage('transfer')">Transfer Ownership</a></li>
+                    <li><a href="#" onclick="showPage('notary')">E-Notary Services</a></li>
+                    <li><a href="#" onclick="showPage('history')">Transaction History</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-outline" id="loginBtn" onclick="showPage('login')">Login</button>
+                <button class="btn btn-primary" id="registerBtn" onclick="showPage('register')">Register</button>
+                <button class="btn btn-outline" id="logoutBtn" style="display: none;" onclick="logout()">Logout</button>
+                <button class="btn btn-primary" id="profileBtn" style="display: none;" onclick="showPage('profile')">Profile</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>Secure Land Registry with Blockchain</h1>
+                <p>LandLedger provides a tamper-proof, transparent system for land registration and verification using Ethereum blockchain technology.</p>
+                <button class="btn btn-primary" onclick="showPage('register')">Get Started</button>
+            </div>
+
+            <h2>How It Works</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus"></i> Registration</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Create your account and register your property details on the blockchain for immutable record keeping.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-qrcode"></i> QR Verification</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Each property gets a unique QR code that can be scanned to verify ownership and transaction history.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-contract"></i> E-Notary</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Digitally sign and notarize property documents with our integrated E-Notary service.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-exchange-alt"></i> Transfer Ownership</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Securely transfer property ownership with smart contract validation and blockchain recording.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div id="login" class="page">
+            <div class="form-container">
+                <h2 class="form-title">Login to Your Account</h2>
+                <form id="loginForm" onsubmit="return login(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Don't have an account? <a href="#" onclick="showPage('register')">Register here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register" class="page">
+            <div class="form-container">
+                <h2 class="form-title">Create an Account</h2>
+                <form id="registerForm" onsubmit="return register(event)">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Already have an account? <a href="#" onclick="showPage('login')">Login here</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile" class="page">
+            <h2>User Profile</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Personal Information</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> <span id="profileName"></span></p>
+                    <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                    <p><strong>User ID:</strong> <span id="profileId"></span></p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 30px;">Your Registered Properties</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Property ID</th>
+                            <th>Address</th>
+                            <th>Area (sq ft)</th>
+                            <th>Registration Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userProperties">
+                        <!-- Properties will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Properties Page -->
+        <div id="properties" class="page">
+            <h2>Register New Property</h2>
+            <div class="form-container">
+                <form id="propertyForm" onsubmit="return registerProperty(event)">
+                    <div class="form-group">
+                        <label for="propertyAddress">Property Address</label>
+                        <textarea id="propertyAddress" required placeholder="Enter full property address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyArea">Area (sq ft)</label>
+                        <input type="number" id="propertyArea" required placeholder="Enter area in square feet">
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyType">Property Type</label>
+                        <select id="propertyType" required>
+                            <option value="">Select property type</option>
+                            <option value="residential">Residential</option>
+                            <option value="commercial">Commercial</option>
+                            <option value="agricultural">Agricultural</option>
+                            <option value="industrial">Industrial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propertyDocuments">Upload Documents</label>
+                        <input type="file" id="propertyDocuments" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Register Property</button>
+                </form>
+            </div>
+
+            <h2>Your Properties</h2>
+            <div class="card-grid" id="propertiesList">
+                <!-- Properties will be added dynamically -->
+            </div>
+        </div>
+
+        <!-- Verify Property Page -->
+        <div id="verify" class="page">
+            <h2>Verify Property</h2>
+            <div class="form-container">
+                <form id="verifyForm" onsubmit="return verifyProperty(event)">
+                    <div class="form-group">
+                        <label>Verification Method</label>
+                        <select id="verifyMethod" onchange="toggleVerifyMethod()">
+                            <option value="id">By Property ID</option>
+                            <option value="address">By Address</option>
+                            <option value="qr">QR Code Scan</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="verifyIdGroup">
+                        <label for="propertyId">Property ID</label>
+                        <input type="text" id="propertyId" placeholder="Enter property ID">
+                    </div>
+                    <div class="form-group" id="verifyAddressGroup" style="display: none;">
+                        <label for="verifyAddress">Property Address</label>
+                        <textarea id="verifyAddress" placeholder="Enter property address"></textarea>
+                    </div>
+                    <div class="form-group" id="verifyQrGroup" style="display: none;">
+                        <label>Scan QR Code</label>
+                        <div style="text-align: center; margin: 15px 0;">
+                            <button type="button" class="btn btn-primary" onclick="scanQRCode()">Scan QR Code</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Verify Property</button>
+                </form>
+            </div>
+
+            <div id="verificationResult" style="display: none;">
+                <h2>Verification Result</h2>
+                <div class="property-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Property ID:</div>
+                        <div class="detail-value" id="verifyPropId"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Address:</div>
+                        <div class="detail-value" id="verifyAddressResult"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Area:</div>
+                        <div class="detail-value" id="verifyArea"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Property Type:</div>
+                        <div class="detail-value" id="verifyType"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Current Owner:</div>
+                        <div class="detail-value" id="verifyOwner"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Registration Date:</div>
+                        <div class="detail-value" id="verifyRegDate"></div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Status:</div>
+                        <div class="detail-value" id="verifyStatus" style="font-weight: bold;"></div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="printPropertyDetails()">Print Details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transfer Ownership Page -->
+        <div id="transfer" class="page">
+            <h2>Transfer Property Ownership</h2>
+            <div class="form-container">
+                <form id="transferForm" onsubmit="return transferOwnership(event)">
+                    <div class="form-group">
+                        <label for="transferProperty">Select Property</label>
+                        <select id="transferProperty" required onchange="updateTransferDetails()">
+                            <option value="">Select a property to transfer</option>
+                        </select>
+                    </div>
+                    <div id="transferDetails" style="display: none;">
+                        <div class="detail-row">
+                            <div class="detail-label">Current Owner:</div>
+                            <div class="detail-value" id="currentOwner"></div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Registration Date:</div>
+                            <div class="detail-value" id="regDate"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newOwnerEmail">New Owner's Email</label>
+                        <input type="email" id="newOwnerEmail" required placeholder="Enter new owner's email">
+                    </div>
+                    <div class="form-group">
+                        <label for="transferAmount">Transfer Amount (₹)</label>
+                        <input type="number" id="transferAmount" required placeholder="Enter transfer amount">
+                    </div>
+                    <div class="form-group">
+                        <label for="transferDoc">Upload Transfer Document</label>
+                        <input type="file" id="transferDoc">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Initiate Transfer</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- E-Notary Services Page -->
+        <div id="notary" class="page">
+            <h2>E-Notary Services</h2>
+            <div class="form-container">
+                <form id="notaryForm" onsubmit="return notarizeDocument(event)">
+                    <div class="form-group">
+                        <label for="notaryProperty">Select Property</label>
+                        <select id="notaryProperty" required>
+                            <option value="">Select a property</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notaryDocType">Document Type</label>
+                        <select id="notaryDocType" required>
+                            <option value="">Select document type</option>
+                            <option value="sale_deed">Sale Deed</option>
+                            <option value="mortgage">Mortgage Agreement</option>
+                            <option value="lease">Lease Agreement</option>
+                            <option value="gift">Gift Deed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notaryDoc">Upload Document</label>
+                        <input type="file" id="notaryDoc" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="notaryNotes">Notes</label>
+                        <textarea id="notaryNotes" placeholder="Any additional notes"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Submit for Notarization</button>
+                </form>
+            </div>
+
+            <h2>Notarization History</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Document ID</th>
+                            <th>Property</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notaryHistory">
+                        <!-- Notary history will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Transaction History Page -->
+        <div id="history" class="page">
+            <h2>Transaction History</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Property ID</th>
+                            <th>Type</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Date</th>
+                            <th>Amount (₹)</th>
+                            <th>Transfer Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionHistory">
+                        <!-- Transactions will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="window.print()">Print History</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>LandLedger</h3>
+                <p>Blockchain-enabled immutable land registry with E-Notary integration and QR-code verification.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <p><a href="#" onclick="showPage('home')" style="color: white;">Home</a></p>
+                <p><a href="#" onclick="showPage('properties')" style="color: white;">Properties</a></p>
+                <p><a href="#" onclick="showPage('verify')" style="color: white;">Verify Property</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> info@landledger.com</p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Blockchain Ave, Tech City</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 LandLedger. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
